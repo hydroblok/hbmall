@@ -1,0 +1,5 @@
+spring:
+  data:
+    mongodb:
+      database: hbmall
+      port: 0
