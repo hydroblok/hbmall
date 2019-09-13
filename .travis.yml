@@ -43,8 +43,6 @@ after_success:
 # DEPLOY CONFLIG
 - export IMAGE_NAME=config
 - export IMAGE_VERSION=v1
-- docker build -t gcr.io/$(PROJECT_ID)/$(IMAGE_NAME):$(IMAGE_VERSION) ./config
-- docker push gcr.io/$(PROJECT_ID)/$(IMAGE_NAME):$(IMAGE_VERSION)
+- docker build -t gcr.io/${PROJECT_ID}/${IMAGE_NAME}:${IMAGE_VERSION} config
+- docker push gcr.io/${PROJECT_ID}/${IMAGE_NAME}:${IMAGE_VERSION}
 - kubectl apply -f config/k8s.yml
-- kubectl patch deployment $(IMAGE_NAME) -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}"
-
