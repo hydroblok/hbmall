@@ -7,6 +7,10 @@ jdk: oraclejdk8
 env:
   global:
   - COMMIT=${TRAVIS_COMMIT::7}
+  - KEY_FILE:=gcloud-service-account-secret.json
+  - PROJECT_ID:=light-ether-252717
+  - K8s_CLUSTER:=standard-cluster-1
+  - ZONE:=us-west1-a
   - secure: YvlEqzgnRz8ZkiS1Ob0ePtTQXKynOnfTdGPai0wL+7Zp139XGVwulBYdDl/IPn+7dq/93g0MLe34EgeAa86kWeVabZ25ahc+gTh8cHLivFd90HAYMm7I25FhV9Q+5IQKLHLmZqM8j68d441xFNpAmXMkr6TJqickgXhSxC2yqhZEEoR1PzrlxX75+xoPPk9Sh8pZwXpsg1GdEefQQDyCLyTdAaxUAZaw2vN3FR1NfsrcmWjivLfJFscuBVOHEakwHnlahXo77EBiblkxJy7CI6xWGvgvIbk+8xOxnzpThV2V6Gf1t//rwwgIDswsy6WGEGhjV1t1Z9EtpnJD50kxr4P4aSDCn7V+zwPXjT5LtkDFhrFpDF066qxDtx/4w5rz5m8/qUERWQ+zEFVDxsiyo9zrOEvnwQiEOUGxnCyHbdA0msdmpoYf/xkk1wYez0shOj1YDfYIklRjTFu2D19A2zDoGkWqgXHfEZw45v1sZhp5hDFCnjd6Sk2QIuTYeET81ZHo4oBpsipq9yCy3TuhEV1AMJs+tlp9KZNw9T/FfYLxixO/F/rv4ulODCC1yHZuXG2TN3WooicC/a0pHwzw+jSbn47ZsDPw19B7AlltuJDus0i9DiRI4bB9z2x9JxUAfkB9DHZaOc5ObFFVd4Be7PHK5vkS88jvbRcS5SJxZbM= #SONAR_TOKEN
 addons:
   sonarcloud:
@@ -16,6 +20,13 @@ addons:
 
 before_install:
   - openssl aes-256-cbc -K $encrypted_d49a433d04ee_key -iv $encrypted_d49a433d04ee_iv -in gcloud-service-account-secret.json.enc -out gcloud-service-account-secret.json -d
+  - curl https://sdk.cloud.google.com | bash > /dev/null
+  - source $HOME/google-cloud-sdk/path.bash.inc
+  - gcloud components update kubectl
+  - gcloud auth activate-service-account --key-file ${KEY_FILE}
+  - gcloud config set project ${PROJECT_ID}
+  - gcloud config set compute/zone ${ZONE}
+  - gcloud container clusters get-credentials ${K8s_CLUSTER}
 
 script:
   - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar

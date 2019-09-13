@@ -1,17 +1,6 @@
-#!/usr/bin/env bash
-
-# Make sure we have gcloud installed in travis env
-if [ ! -d "$HOME/google-cloud-sdk/bin" ]; then
-  rm -rf "$HOME/google-cloud-sdk"
-  curl https://sdk.cloud.google.com | bash
-fi
-
-# Promote gcloud to PATH top priority (prevent using old version fromt travis)
-source $HOME/google-cloud-sdk/path.bash.inc
-
-# Make sure kubectl is updated to latest version
-echo "Install kubectl"
-gcloud components install kubectl
-
-echo "Start deploying"
-make -f config/Makefile gauth build push deploy
+IMAGE_NAME:=config
+IMAGE_VERSION:=v1
+docker build -t gcr.io/$(PROJECT_ID)/$(IMAGE_NAME):$(IMAGE_VERSION) .
+docker push gcr.io/$(PROJECT_ID)/$(IMAGE_NAME):$(IMAGE_VERSION)
+kubectl apply -f k8s.yml
+kubectl patch deployment $(IMAGE_NAME) -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}"
