@@ -1,9 +1,6 @@
-FROM java:8-jre
-MAINTAINER Jimmy Luo <jimmy.zw.luo@gmail.com>
-
-ADD ./target/config.jar /app/
-CMD ["java", "-Xmx200m", "-jar", "/app/config.jar"]
-
-HEALTHCHECK --interval=30s --timeout=30s CMD curl -f http://localhost:8888/actuator/health || exit 1
-
+FROM java:8-alpine
+VOLUME /config
+ADD target/config-1.0.0-SNAPSHOT.jar app.jar
+RUN sh -c 'touch app.jar'
 EXPOSE 8888
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-Dspring.profiles.active=docker", "-jar","/app.jar"]

@@ -1,0 +1,40 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: hbmall-config
+spec:
+  revisionHistoryLimit: 1
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: hbmall-config
+    spec:
+      containers:
+        - name: hbmall-config
+          image: gcr.io/light-ether-252717/hbmall-config:v1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8000
+          resources:
+            limits:
+              cpu: 500m
+            requests:
+              cpu: 500m
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hbmall-config
+spec:
+  type: LoadBalance
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+  selector:
+    app: hbmall-config

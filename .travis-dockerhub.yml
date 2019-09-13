@@ -17,9 +17,6 @@ addons:
     token:
       secure: "$SONAR_TOKEN"
 
-before_install:
-  - openssl aes-256-cbc -K $encrypted_d49a433d04ee_key -iv $encrypted_d49a433d04ee_iv -in gcloud-service-account-secret.json.enc -out gcloud-service-account-secret.json -d
-
 script:
   - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar
 
@@ -27,13 +24,75 @@ cache:
   directories:
     - "$HOME/.m2/repository"
     - "$HOME/.sonar/cache"
-    - $HOME/google-cloud-sdk
+
 after_success:
 - bash <(curl -s https://codecov.io/bash)
+- docker login -u $DOCKER_USER -p $DOCKER_PASS
 
 #TAG
 - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
 
-# DEPLOY CONFLIG
-- ./config/deploy.sh
+# CONFIG SERVICE
+- export CONFIG=hbmall/piggymetrics-config
+- docker build -t $CONFIG:$COMMIT ./config
+- docker tag $CONFIG:$COMMIT $CONFIG:$TAG
+- docker push $CONFIG
 
+# REGISTRY
+- export REGISTRY=hbmall/piggymetrics-registry
+- docker build -t $REGISTRY:$COMMIT ./registry
+- docker tag $REGISTRY:$COMMIT $REGISTRY:$TAG
+- docker push $REGISTRY
+
+# GATEWAY
+- export GATEWAY=hbmall/piggymetrics-gateway
+- docker build -t $GATEWAY:$COMMIT ./gateway
+- docker tag $GATEWAY:$COMMIT $GATEWAY:$TAG
+- docker push $GATEWAY
+
+# AUTH SERVICE
+- export AUTH_SERVICE=hbmall/piggymetrics-auth-service
+- docker build -t $AUTH_SERVICE:$COMMIT ./auth-service
+- docker tag $AUTH_SERVICE:$COMMIT $AUTH_SERVICE:$TAG
+- docker push $AUTH_SERVICE
+
+# ACCOUNT SERVICE
+- export ACCOUNT_SERVICE=hbmall/piggymetrics-account-service
+- docker build -t $ACCOUNT_SERVICE:$COMMIT ./account-service
+- docker tag $ACCOUNT_SERVICE:$COMMIT $ACCOUNT_SERVICE:$TAG
+- docker push $ACCOUNT_SERVICE
+
+# STATISTICS SERVICE
+- export STATISTICS_SERVICE=hbmall/piggymetrics-statistics-service
+- docker build -t $STATISTICS_SERVICE:$COMMIT ./statistics-service
+- docker tag $STATISTICS_SERVICE:$COMMIT $STATISTICS_SERVICE:$TAG
+- docker push $STATISTICS_SERVICE
+
+# NOTIFICATION_SERVICE
+- export NOTIFICATION_SERVICE=hbmall/piggymetrics-notification-service
+- docker build -t $NOTIFICATION_SERVICE:$COMMIT ./notification-service
+- docker tag $NOTIFICATION_SERVICE:$COMMIT $NOTIFICATION_SERVICE:$TAG
+- docker push $NOTIFICATION_SERVICE
+
+# MONITORING
+- export MONITORING=hbmall/piggymetrics-monitoring
+- docker build -t $MONITORING:$COMMIT ./monitoring
+- docker tag $MONITORING:$COMMIT $MONITORING:$TAG
+- docker push $MONITORING
+
+# TURBINE STREAM SERVICE
+- export TURBINE=hbmall/piggymetrics-turbine-stream-service
+- docker build -t $TURBINE:$COMMIT ./turbine-stream-service
+- docker tag $TURBINE:$COMMIT $TURBINE:$TAG
+- docker push $TURBINE
+
+# MONGO DB
+- export MONGO_DB=hbmall/piggymetrics-mongodb
+- docker build -t $MONGO_DB:$COMMIT ./mongodb
+- docker tag $MONGO_DB:$COMMIT $MONGO_DB:$TAG
+- docker push $MONGO_DB
+
+deploy:
+  provider: heroku
+  api_key: "$HEROKU_API_KEY"
+  app: hbmall
