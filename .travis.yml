@@ -11,6 +11,7 @@ env:
   - PROJECT_ID:=light-ether-252717
   - K8s_CLUSTER:=standard-cluster-1
   - ZONE:=us-west1-a
+  - CLOUDSDK_CORE_DISABLE_PROMPTS = 1
   - secure: YvlEqzgnRz8ZkiS1Ob0ePtTQXKynOnfTdGPai0wL+7Zp139XGVwulBYdDl/IPn+7dq/93g0MLe34EgeAa86kWeVabZ25ahc+gTh8cHLivFd90HAYMm7I25FhV9Q+5IQKLHLmZqM8j68d441xFNpAmXMkr6TJqickgXhSxC2yqhZEEoR1PzrlxX75+xoPPk9Sh8pZwXpsg1GdEefQQDyCLyTdAaxUAZaw2vN3FR1NfsrcmWjivLfJFscuBVOHEakwHnlahXo77EBiblkxJy7CI6xWGvgvIbk+8xOxnzpThV2V6Gf1t//rwwgIDswsy6WGEGhjV1t1Z9EtpnJD50kxr4P4aSDCn7V+zwPXjT5LtkDFhrFpDF066qxDtx/4w5rz5m8/qUERWQ+zEFVDxsiyo9zrOEvnwQiEOUGxnCyHbdA0msdmpoYf/xkk1wYez0shOj1YDfYIklRjTFu2D19A2zDoGkWqgXHfEZw45v1sZhp5hDFCnjd6Sk2QIuTYeET81ZHo4oBpsipq9yCy3TuhEV1AMJs+tlp9KZNw9T/FfYLxixO/F/rv4ulODCC1yHZuXG2TN3WooicC/a0pHwzw+jSbn47ZsDPw19B7AlltuJDus0i9DiRI4bB9z2x9JxUAfkB9DHZaOc5ObFFVd4Be7PHK5vkS88jvbRcS5SJxZbM= #SONAR_TOKEN
 addons:
   sonarcloud:
