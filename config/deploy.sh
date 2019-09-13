@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+echo "Home path: $HOME"
 # Make sure we have gcloud installed in travis env
 if [ ! -d "$HOME/google-cloud-sdk/bin" ]; then
   rm -rf "$HOME/google-cloud-sdk"
