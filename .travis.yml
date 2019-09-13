@@ -6,6 +6,7 @@ jdk: oraclejdk8
 
 env:
   global:
+  - CLOUDSDK_CORE_DISABLE_PROMPTS=1 # Do not prompt for user input when using any SDK methods.
   - COMMIT=${TRAVIS_COMMIT::7}
   - KEY_FILE=gcloud-service-account-secret.json
   - PROJECT_ID=light-ether-252717
