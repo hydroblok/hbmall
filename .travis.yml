@@ -28,9 +28,6 @@ cache:
 after_success:
 - bash <(curl -s https://codecov.io/bash)
 
-#TAG
-- export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
-
 # DEPLOY CONFLIG
 - chmod 755 config/deploy.sh
 - ./config/deploy.sh

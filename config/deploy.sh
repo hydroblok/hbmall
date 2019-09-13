@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-echo "Home path: $HOME"
 # Make sure we have gcloud installed in travis env
 if [ ! -d "$HOME/google-cloud-sdk/bin" ]; then
   rm -rf "$HOME/google-cloud-sdk"
@@ -11,6 +10,8 @@ fi
 source $HOME/google-cloud-sdk/path.bash.inc
 
 # Make sure kubectl is updated to latest version
-gcloud components update kubectl
+echo "Install kubectl"
+gcloud components install kubectl
 
+echo "Start deploying"
 make -f config/Makefile gauth build push deploy
