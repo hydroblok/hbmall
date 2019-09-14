@@ -8,7 +8,6 @@ env:
   global:
   - CLOUDSDK_CORE_DISABLE_PROMPTS=1 # Do not prompt for user input when using any SDK methods.
   - COMMIT=${TRAVIS_COMMIT::7}
-  - KEY_FILE=hbmall-release-account.json
   - PROJECT_ID=light-ether-252717
   - K8s_CLUSTER=standard-cluster-1
   - ZONE=us-west1-a
@@ -20,10 +19,11 @@ addons:
       secure: "$SONAR_TOKEN"
 
 before_install:
+  - openssl aes-256-cbc -K $encrypted_d49a433d04ee_key -iv $encrypted_d49a433d04ee_iv -in hbmall-release-account.json.enc -out hbmall-release-account.json -d
   - if [ ! -d "$HOME/google-cloud-sdk/bin" ]; then rm -rf $HOME/google-cloud-sdk; curl https://sdk.cloud.google.com | bash > /dev/null; fi
   - source $HOME/google-cloud-sdk/path.bash.inc
   - gcloud components update kubectl
-  - gcloud auth activate-service-account --key-file ${KEY_FILE}
+  - gcloud auth activate-service-account --key-file hbmall-release-account.json
   - gcloud auth configure-docker
   - gcloud config set project ${PROJECT_ID}
   - gcloud config set compute/zone ${ZONE}
