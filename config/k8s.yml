@@ -20,11 +20,6 @@ spec:
             httpGet:
               path: /
               port: 8000
-          resources:
-            limits:
-              cpu: 500m
-            requests:
-              cpu: 500m
 ---
 apiVersion: v1
 kind: Service
