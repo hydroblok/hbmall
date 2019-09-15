@@ -11,11 +11,11 @@ spec:
         app: config
     spec:
       containers:
-        - name: config
-          image: gcr.io/hbmall-252717/config:v1
-          imagePullPolicy: Always
-          ports:
-            - containerPort: 8888
+        name: config
+        image: gcr.io/hbmall-252717/config:v1
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 8888
         - args:
             env:
               - name: CONFIG_SERVICE_USER
