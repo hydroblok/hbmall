@@ -24,3 +24,7 @@ server:
 feign:
   hystrix:
     enabled: true
+
+---
+spring:
+  profiles: development

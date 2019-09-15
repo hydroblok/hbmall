@@ -25,3 +25,7 @@ security:
 spring:
   rabbitmq:
     host: rabbitmq
+
+---
+spring:
+  profiles: development
