@@ -11,23 +11,22 @@ spec:
         app: config
     spec:
       containers:
-        name: config
-        image: gcr.io/hbmall-252717/config:v1
-        imagePullPolicy: Always
-        ports:
-          - containerPort: 8888
-        - args:
-            env:
-              - name: CONFIG_SERVICE_USER
-                valueFrom:
-                  secretKeyRef:
-                    name: config-secret
-                    key: username
-              - name: CONFIG_SERVICE_PASSWORD
-                valueFrom:
-                  secretKeyRef:
-                    name: config-secret
-                    key: password
+        - name: config
+          image: gcr.io/hbmall-252717/config:v1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8888
+          env:
+            - name: CONFIG_SERVICE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: config-secret
+                  key: username
+            - name: CONFIG_SERVICE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: config-secret
+                  key: password
 ---
 apiVersion: v1
 kind: Service
